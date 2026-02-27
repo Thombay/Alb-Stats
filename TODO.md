@@ -1,0 +1,42 @@
+# TODO
+
+- [x] Build local Plotly dashboard for Excel export (`Exportdaten` sheet, header row 5).
+- [x] Use `Couleurname` as the only displayed person identifier.
+- [x] Add average age metrics:
+  - [x] all members
+  - [x] `UP` + `BP` + `EM` (`EM` counts with UP/BP)
+  - [x] `BU` + `FU` (`BU` = Bursch, `FU` = Fuchs)
+  - [x] flexible status selection
+- [x] Add chargen statistics:
+  - [x] total chargen per person
+  - [x] per-semester chargen count per person
+- [x] Add distinction between Aktivenchargen, Philisterchargen, and Gesamtchargen.
+- [x] Add Top 20 Bundesbrueder view.
+- [x] Add `README.md` with setup and run instructions.
+- [x] Add file-upload UI (instead of only CLI file path).
+- [x] Add export button (CSV/Excel) for filtered table results.
+- [x] Add automated tests for parsing and semester extraction.
+- [x] Add UI button/workflow to manually classify `Unklare Chargen` as Aktiven, Philister, Verbandscharge (Aktiven/Philister), or Funktionaere.
+- [x] Clarify `EM` meaning: `EM = Ehrenmitglied`.
+- [x] Add rule-based chargen type extraction directly from chargen name/title.
+
+Notes:
+- Funktionaere sind keine Chargen and are excluded from all chargen counts/charts.
+- Zirkel roles are ignored (treated as non-charge).
+- Chargen type rule implemented as:
+  - Name-based override to `Aktivenchargen` for: `Barwart`, `Bierkassier/Kassier`, `Consenior`, `Senior`, `Schriftfuehrer`, `Fuchsmajor`, `OV-Praesident/OV-Präsident`
+  - Name-based override to `Philisterchargen` for: `Philistersenior`, `Philisterconsenior`, `Philisterschriftfuehrer`, `Philisterkassier`
+  - semester start date before `Philistrierung` => `Aktivenchargen`
+  - semester start date on/after `Philistrierung` => `Philisterchargen`
+  - missing semester or missing philistrierung date => `Unklare Chargen`
+- Chargen counting rule:
+  - explicit `SS ...` / `WS ...` entries count as 1 per listed semester
+  - date range entries (`Von ... bis ...`, `Ab ...`) are expanded to semester units and counted per semester span
+- Manual override rules are persisted locally in `chargen_class_overrides.json` and use date-free chargen keys.
+- Added selectable category graph for: Aktivenchargen, Philisterchargen, Verbandschargen (Aktiven), Verbandschargen (Philister), Funktionaere.
+- Added extra statistics: median age, age bins, status counts/percentages, chargen intensity, average chargen per person.
+- Added multi-select chargen graph to show top people for selected chargen.
+- Chargen intensity now uses `Reception` date to today as year basis (fallback to semester span if reception missing).
+- Run status (2026-02-27):
+  - `python app.py --file Datenexport_20260227_1617.xlsx --check-only` passed
+  - `pytest -q` passed (`6 passed`)
